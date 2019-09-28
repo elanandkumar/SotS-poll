@@ -101,15 +101,15 @@ app.bindLogoutButton = function() {
       // Stop it from redirecting anywhere
       e.preventDefault();
 
-      // Log the user out
+      // Log the team out
       app.logTeamOut();
     });
 };
 
-// Log the user out then redirect them
-app.logTeamOut = function(redirectUser) {
-  // Set redirectUser to default to true
-  redirectUser = typeof redirectUser == "boolean" ? redirectUser : true;
+// Log the team out then redirect them
+app.logTeamOut = function(redirectTeam) {
+  // Set redirectTeam to default to true
+  redirectTeam = typeof redirectTeam == "boolean" ? redirectTeam : true;
 
   // Get the current token id
   var tokenId =
@@ -131,8 +131,8 @@ app.logTeamOut = function(redirectUser) {
       // Set the app.config token as false
       app.setSessionToken(false);
 
-      // Send the user to the logged out page
-      if (redirectUser) {
+      // Send the team to the logged out page
+      if (redirectTeam) {
         window.location = "/session/deleted";
       }
     }
@@ -224,7 +224,7 @@ app.bindForms = function() {
             // Display an error on the form if needed
             if (statusCode !== 200) {
               if (statusCode == 403) {
-                // log the user out
+                // log the team out
                 app.logTeamOut();
               } else {
                 // Try to get the error from the api, or set a default error message
@@ -257,9 +257,9 @@ app.bindForms = function() {
 // Form response processor
 app.formResponseProcessor = function(formId, requestPayload, responsePayload) {
   var functionToCall = false;
-  // If account creation was successful, try to immediately log the user in
+  // If account creation was successful, try to immediately log the team in
   if (formId == "accountCreate") {
-    // Take the phone and password, and use it to log the user in
+    // Take the team and password, and use it to log the team in
     var newPayload = {
       name: requestPayload.name,
       password: requestPayload.password
@@ -282,14 +282,14 @@ app.formResponseProcessor = function(formId, requestPayload, responsePayload) {
           document.querySelector("#" + formId + " .formError").style.display =
             "block";
         } else {
-          // If successful, set the token and redirect the user
+          // If successful, set the token and redirect the team
           app.setSessionToken(newResponsePayload);
           window.location = "/members/all";
         }
       }
     );
   }
-  // If login was successful, set the token in localstorage and redirect the user
+  // If login was successful, set the token in localstorage and redirect the team
   if (formId == "sessionCreate") {
     app.setSessionToken(responsePayload);
     window.location = "/members/all";
@@ -306,18 +306,18 @@ app.formResponseProcessor = function(formId, requestPayload, responsePayload) {
       "block";
   }
 
-  // If the user just deleted their account, redirect them to the account-delete page
+  // If the team just deleted their account, redirect them to the account-delete page
   if (formId == "accountEdit3") {
     app.logTeamOut(false);
     window.location = "/account/deleted";
   }
 
-  // If the user just created a new check successfully, redirect back to the dashboard
+  // If the team just created a new check successfully, redirect back to the dashboard
   if (formId == "membersCreate") {
     window.location = "/members/all";
   }
 
-  // If the user just deleted a check, redirect them to the dashboard
+  // If the team just deleted a check, redirect them to the dashboard
   if (formId == "membersEdit2") {
     window.location = "/members/all";
   }
@@ -440,41 +440,37 @@ app.loadDataOnPage = function() {
 
 // Load the account edit page specifically
 app.loadAccountEditPage = function() {
-  // Get the phone number from the current token, or log the user out if none is there
-  var phone =
-    typeof app.config.sessionToken.phone == "string"
-      ? app.config.sessionToken.phone
+  // Get the team name from the current token, or log the team out if none is there
+  var teamName =
+    typeof app.config.sessionToken.name == "string"
+      ? app.config.sessionToken.name
       : false;
-  if (phone) {
-    // Fetch the user data
+  if (teamName) {
+    // Fetch the team data
     var queryStringObject = {
-      phone: phone
+      name: teamName
     };
     app.client.request(
       undefined,
-      "api/users",
+      "api/teams",
       "GET",
       queryStringObject,
       undefined,
       function(statusCode, responsePayload) {
         if (statusCode == 200) {
           // Put the data into the forms as values where needed
-          document.querySelector("#accountEdit1 .firstNameInput").value =
-            responsePayload.firstName;
-          document.querySelector("#accountEdit1 .lastNameInput").value =
-            responsePayload.lastName;
-          document.querySelector("#accountEdit1 .displayPhoneInput").value =
-            responsePayload.phone;
+          document.querySelector("#accountEdit1 .teamNameInput").value =
+            responsePayload.name;
 
-          // Put the hidden phone field into both forms
-          var hiddenPhoneInputs = document.querySelectorAll(
-            "input.hiddenPhoneNumberInput"
+          // Put the hidden name field into both forms
+          var hiddenTeamNameInputs = document.querySelectorAll(
+            "input.hiddenTeamNameInput"
           );
-          for (var i = 0; i < hiddenPhoneInputs.length; i++) {
-            hiddenPhoneInputs[i].value = responsePayload.phone;
+          for (var i = 0; i < hiddenTeamNameInputs.length; i++) {
+            hiddenTeamNameInputs[i].value = responsePayload.name;
           }
         } else {
-          // If the request comes back as something other than 200, log the user our (on the assumption that the api is temporarily down or the users token is bad)
+          // If the request comes back as something other than 200, log the team our (on the assumption that the api is temporarily down or the teams token is bad)
           app.logTeamOut();
         }
       }
@@ -486,7 +482,7 @@ app.loadAccountEditPage = function() {
 
 // Load the dashboard page specifically
 app.loadMembersListPage = function() {
-  // Get the phone number from the current token, or log the user out if none is there
+  // Get the team name from the current token, or log the team out if none is there
   var name =
     typeof app.config.sessionToken.name == "string"
       ? app.config.sessionToken.name
@@ -526,7 +522,7 @@ app.loadMembersListPage = function() {
                 undefined,
                 function(statusCode, responsePayload) {
                   if (statusCode == 200) {
-                    var memberData = responsePayload;
+                    // var memberData = responsePayload;
                     // Make the member data into a table row
                     var table = document.getElementById("membersListTable");
                     var tr = table.insertRow(-1);
@@ -534,9 +530,14 @@ app.loadMembersListPage = function() {
                     var td0 = tr.insertCell(0);
                     var td1 = tr.insertCell(1);
                     var td2 = tr.insertCell(2);
+                    var td3 = tr.insertCell(3);
                     td0.innerHTML = responsePayload.firstName;
                     td1.innerHTML = responsePayload.lastName;
                     td2.innerHTML = responsePayload.email;
+                    td3.innerHTML =
+                      '<a href="/members/edit?id=' +
+                      responsePayload.id +
+                      '">View / Edit / Delete</a>';
                   } else {
                     console.log("Error trying to load member ID: ", memberId);
                   }
@@ -558,7 +559,7 @@ app.loadMembersListPage = function() {
             document.getElementById("createMemberCTA").style.display = "block";
           }
         } else {
-          // If the request comes back as something other than 200, log the user our (on the assumption that the api is temporarily down or the users token is bad)
+          // If the request comes back as something other than 200, log the team our (on the assumption that the api is temporarily down or the teams token is bad)
           app.logTeamOut();
         }
       }
@@ -576,11 +577,13 @@ app.loadMembersEditPage = function() {
     window.location.href.split("=")[1].length > 0
       ? window.location.href.split("=")[1]
       : false;
+  console.log("edit...", id);
   if (id) {
     // Fetch the check data
     var queryStringObject = {
       id: id
     };
+
     app.client.request(
       undefined,
       "api/members",
@@ -588,6 +591,7 @@ app.loadMembersEditPage = function() {
       queryStringObject,
       undefined,
       function(statusCode, responsePayload) {
+        console.log(statusCode, responsePayload);
         if (statusCode == 200) {
           // Put the hidden id field into both forms
           var hiddenIdInputs = document.querySelectorAll("input.hiddenIdInput");
@@ -596,38 +600,24 @@ app.loadMembersEditPage = function() {
           }
 
           // Put the data into the top form as values where needed
-          document.querySelector("#membersEdit1 .displayIdInput").value =
+          document.querySelector("#membersEdit1 .memberIdInput").value =
             responsePayload.id;
-          document.querySelector("#membersEdit1 .displayStateInput").value =
-            responsePayload.state;
-          document.querySelector("#membersEdit1 .protocolInput").value =
-            responsePayload.protocol;
-          document.querySelector("#membersEdit1 .urlInput").value =
-            responsePayload.url;
-          document.querySelector("#membersEdit1 .methodInput").value =
-            responsePayload.method;
-          document.querySelector("#membersEdit1 .timeoutInput").value =
-            responsePayload.timeoutSeconds;
-          var successCodeCheckboxes = document.querySelectorAll(
-            "#MembersEdit1 input.successCodesInput"
-          );
-          for (var i = 0; i < successCodeCheckboxes.length; i++) {
-            if (
-              responsePayload.successCodes.indexOf(
-                parseInt(successCodeCheckboxes[i].value)
-              ) > -1
-            ) {
-              successCodeCheckboxes[i].checked = true;
-            }
-          }
+          document.querySelector("#membersEdit1 .teamNameInput").value =
+            responsePayload.teamName;
+          document.querySelector("#membersEdit1 .firstNameInput").value =
+            responsePayload.firstName;
+          document.querySelector("#membersEdit1 .lastNameInput").value =
+            responsePayload.lastName;
+          document.querySelector("#membersEdit1 .emailInput").value =
+            responsePayload.email;
         } else {
           // If the request comes back as something other than 200, redirect back to dashboard
-          window.location = "/Members/all";
+          window.location = "/members/all";
         }
       }
     );
   } else {
-    window.location = "/Members/all";
+    window.location = "/members/all";
   }
 };
 

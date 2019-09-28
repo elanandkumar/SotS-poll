@@ -9,18 +9,10 @@
     <input type="hidden" name="_method" value="PUT" />
     <div class="formError"></div>
     <div class="formSuccess">Your Changes Have Been Saved</div>
-    <input class="hiddenPhoneNumberInput" type="hidden" name="phone" />
+    <input class="hiddenTeamNameInput" type="hidden" name="name" />
     <div class="inputWrapper">
-      <div class="inputLabel">Phone Number</div>
-      <input class="disabled displayPhoneInput" type="text" name="displayPhone" disabled />
-    </div>
-    <div class="inputWrapper">
-      <div class="inputLabel">First Name</div>
-      <input class="firstNameInput" type="text" name="firstName" placeholder="John" />
-    </div>
-    <div class="inputWrapper">
-      <div class="inputLabel">Last Name</div>
-      <input class="lastNameInput" type="text" name="lastName" placeholder="Smith" />
+      <div class="inputLabel">Team Name</div>
+      <input class="disabled teamNameInput" type="text" name="teamName" disabled />
     </div>
     <div class="inputWrapper ctaWrapper">
       <button type="submit" class="cta green">Save Changes</button>
@@ -35,7 +27,7 @@
     <input type="hidden" name="_method" value="PUT" />
     <div class="formError"></div>
     <div class="formSuccess">Your New Password Has Been Saved</div>
-    <input class="hiddenPhoneNumberInput" type="hidden" name="phone" />
+    <input class="hiddenTeamNameInput" type="hidden" name="name" />
     <div class="inputWrapper">
       <div class="inputLabel">Choose a New Password</div>
       <input type="password" name="password" placeholder="Make it a good one!" />
@@ -53,8 +45,8 @@
   <form id="accountEdit3" action="/api/teams" method="DELETE">
     <input type="hidden" name="_method" value="DELETE" />
     <div class="formError"></div>
-    <div class="warning">Warning: This action cannot be undone. Dont click this button on accident!</div>
-    <input class="hiddenPhoneNumberInput" type="hidden" name="phone" />
+    <div class="warning">Warning: This action cannot be undone. Don't click this button on accident!</div>
+    <input class="hiddenTeamNameInput" type="hidden" name="name" />
     <div class="inputWrapper ctaWrapper">
       <button type="submit" class="cta red">Delete Account</button>
     </div>
