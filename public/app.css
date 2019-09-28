@@ -311,14 +311,16 @@ td a:active {
 
 /* Page specific styles for dashboard */
 
-#noMembersMessage td {
+#noMembersMessage td,
+#noPollMessage td {
   text-align: center;
   font-style: italic;
   font-size: 20px;
   padding: 20px;
 }
 
-#noMembersMessage {
+#noMembersMessage,
+#noPollMessage {
   display: none;
 }
 

@@ -1,0 +1,30 @@
+<h1>Create Poll</h1>
+<h2>Create a poll to vote for star of the sprint</h2>
+
+<div class="formWrapper">
+  <form id="pollCreate" action="/api/poll" method="POST">
+    <div class="formError"></div>
+    <input class="hiddenTeamNameInput" type="hidden" name="name" />
+    <div class="inputWrapper">
+      <div class="inputLabel">Team Name</div>
+      <input class="disabled teamNameInput" type="text" name="teamName" disabled />
+    </div>
+    <div class="inputWrapper">
+      <div class="inputLabel">Poll Title</div>
+      <input class="pollTitleInput" type="text" name="pollTitle" />
+    </div>
+    <div class="inputWrapper">
+      <div class="inputLabel">Poll Title</div>
+      <input class="pollDescriptionInput" type="text" name="pollDescription" />
+    </div>
+    <div class="inputWrapper">
+      <div class="inputLabel">Select team members to include</div>
+      <div class="checkboxGroup" id="membersList">
+        <!--<input type="checkbox" class="multiSelect intVal" name="successCodes" value="200" checked>200-->
+      </div>
+    </div>
+    <div class="inputWrapper ctaWrapper">
+      <button type="submit" class="cta green">Create</button>
+    </div>
+  </form>
+</div>

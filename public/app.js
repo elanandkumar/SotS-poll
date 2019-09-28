@@ -174,7 +174,7 @@ app.bindForms = function() {
                 : "";
             var valueOfElement =
               elements[i].type == "checkbox" &&
-              classOfElement.indexOf("multiselect") == -1
+              classOfElement.indexOf("multiSelect") == -1
                 ? elements[i].checked
                 : classOfElement.indexOf("intval") == -1
                 ? elements[i].value
@@ -193,8 +193,8 @@ app.bindForms = function() {
               if (nameOfElement == "uid") {
                 nameOfElement = "id";
               }
-              // If the element has the class "multiselect" add its value(s) as array elements
-              if (classOfElement.indexOf("multiselect") > -1) {
+              // If the element has the class "multiSelect" add its value(s) as array elements
+              if (classOfElement.indexOf("multiSelect") > -1) {
                 if (elementIsChecked) {
                   payload[nameOfElement] =
                     typeof payload[nameOfElement] == "object" &&
@@ -276,7 +276,7 @@ app.formResponseProcessor = function(formId, requestPayload, responsePayload) {
         if (newStatusCode !== 200) {
           // Set the formError field with the error text
           document.querySelector("#" + formId + " .formError").innerHTML =
-            "Sorry, an error has occured. Please try again.";
+            "Sorry, an error has ocurred. Please try again.";
 
           // Show (unhide) the form error field on the form
           document.querySelector("#" + formId + " .formError").style.display =
@@ -312,12 +312,12 @@ app.formResponseProcessor = function(formId, requestPayload, responsePayload) {
     window.location = "/account/deleted";
   }
 
-  // If the team just created a new check successfully, redirect back to the dashboard
-  if (formId == "membersCreate") {
+  // If the team just created a new member or poll successfully, redirect back to the dashboard
+  if (formId == "membersCreate" || formId == "pollCreate") {
     window.location = "/members/all";
   }
 
-  // If the team just deleted a check, redirect them to the dashboard
+  // If the team just deleted a member, redirect them to the dashboard
   if (formId == "membersEdit2") {
     window.location = "/members/all";
   }
@@ -432,9 +432,108 @@ app.loadDataOnPage = function() {
     app.loadMembersListPage();
   }
 
-  // Logic for check details page
+  // Logic for member details page
   if (primaryClass == "membersEdit") {
     app.loadMembersEditPage();
+  }
+
+  // Logic for poll page
+  if (primaryClass === "pollCreate") {
+    app.loadPollCreatePage();
+  }
+};
+
+// Load the poll create page specifically
+app.loadPollCreatePage = function() {
+  var teamName =
+    typeof app.config.sessionToken.name == "string"
+      ? app.config.sessionToken.name
+      : false;
+  if (teamName) {
+    // Fetch the team data
+    var queryStringObject = {
+      name: teamName
+    };
+    app.client.request(
+      undefined,
+      "api/teams",
+      "GET",
+      queryStringObject,
+      undefined,
+      function(statusCode, responsePayload) {
+        if (statusCode == 200) {
+          // Put the data into the forms as values where needed
+          document.querySelector("#pollCreate .teamNameInput").value =
+            responsePayload.name;
+
+          // Put the hidden name field into both forms
+          var hiddenTeamNameInputs = document.querySelectorAll(
+            "input.hiddenTeamNameInput"
+          );
+          for (var i = 0; i < hiddenTeamNameInputs.length; i++) {
+            hiddenTeamNameInputs[i].value = responsePayload.name;
+          }
+          // load team members.
+          var allMembers =
+            typeof responsePayload.members == "object" &&
+            responsePayload.members instanceof Array &&
+            responsePayload.members.length > 0
+              ? responsePayload.members
+              : [];
+          if (allMembers.length >= 2) {
+            // Show each added member as a new row in the table
+            allMembers.forEach(function(memberId) {
+              // Get the data for the member
+              var newQueryStringObject = {
+                id: memberId
+              };
+              app.client.request(
+                undefined,
+                "api/members",
+                "GET",
+                newQueryStringObject,
+                undefined,
+                function(statusCode, responsePayload) {
+                  if (statusCode == 200) {
+                    // var memberData = responsePayload;
+                    // Make the member data into a table row
+                    var membersDiv = document.getElementById("membersList");
+                    var memberDiv = document.createElement("div");
+                    var checkbox = document.createElement("input");
+                    // Assigning the attributes
+                    // to created checkbox
+                    checkbox.type = "checkbox";
+                    checkbox.name = "teamMember-" + responsePayload.firstName;
+                    checkbox.value = responsePayload.email;
+                    checkbox.id = responsePayload.id;
+                    // TODO. mark it as checked if data is available.
+                    var span = document.createElement("span");
+                    span.innerText =
+                      responsePayload.lastName +
+                      ", " +
+                      responsePayload.firstName +
+                      " (" +
+                      responsePayload.email +
+                      ")";
+                    memberDiv.appendChild(checkbox);
+                    memberDiv.appendChild(span);
+                    membersDiv.appendChild(memberDiv);
+                  } else {
+                    console.log("Error trying to load member ID: ", memberId);
+                  }
+                }
+              );
+            });
+          } else {
+            alert("Please add team members first to create poll");
+            // If the request comes back as something other than 200, log the team out (on the assumption that the api is temporarily down or the teams token is bad)
+            window.location = "/members/all";
+          }
+        }
+      }
+    );
+  } else {
+    app.logTeamOut();
   }
 };
 
@@ -545,7 +644,7 @@ app.loadMembersListPage = function() {
               );
             });
 
-            if (allMembers.length < 5) {
+            if (allMembers.length < 10) {
               // Show the createMember CTA
               document.getElementById("createMemberCTA").style.display =
                 "block";
@@ -557,6 +656,59 @@ app.loadMembersListPage = function() {
 
             // Show the createMember CTA
             document.getElementById("createMemberCTA").style.display = "block";
+          }
+          const allPoll =
+            typeof responsePayload.poll == "object" &&
+            responsePayload.poll instanceof Array &&
+            responsePayload.poll.length > 0
+              ? responsePayload.poll
+              : [];
+          if (allPoll.length > 0) {
+            // Show each added poll as a new row in the table
+            allPoll.forEach(function(pollId) {
+              // Get the data for the member
+              var newQueryStringObject = {
+                id: pollId
+              };
+              app.client.request(
+                undefined,
+                "api/poll",
+                "GET",
+                newQueryStringObject,
+                undefined,
+                function(statusCode, responsePayload) {
+                  if (statusCode == 200) {
+                    // Add the poll data into a table row
+                    var table = document.getElementById("pollListTable");
+                    var tr = table.insertRow(-1);
+                    tr.classList.add("memberRow");
+                    var td0 = tr.insertCell(0);
+                    var td1 = tr.insertCell(1);
+                    var td2 = tr.insertCell(2);
+                    td0.innerHTML = responsePayload.title;
+                    td1.innerHTML = responsePayload.description;
+                    td2.innerHTML =
+                      '<a href="/poll/edit?id=' +
+                      responsePayload.id +
+                      '">View / Edit / Delete</a>';
+                  } else {
+                    console.log("Error trying to load poll ID: ", pollId);
+                  }
+                }
+              );
+            });
+
+            if (allPoll.length < 5) {
+              // Show the createPoll CTA
+              document.getElementById("createPollCTA").style.display = "block";
+            }
+          } else {
+            // Show 'you have no members' message
+            document.getElementById("noPollMessage").style.display =
+              "table-row";
+
+            // Show the createMember CTA
+            document.getElementById("createPollCTA").style.display = "block";
           }
         } else {
           // If the request comes back as something other than 200, log the team our (on the assumption that the api is temporarily down or the teams token is bad)
