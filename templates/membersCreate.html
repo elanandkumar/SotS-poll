@@ -1,0 +1,30 @@
+<h1>Add A Team Member</h1>
+<h2>Add a new member to make your team awesome</h2>
+<a class="backButton" href="/members/all">Back</a>
+<hr />
+
+
+<div class="formWrapper">
+  <form id="membersCreate" action="/api/members" method="POST">
+    <div class="formError"></div>
+
+    <div class="inputWrapper">
+      <div class="inputLabel">First Name</div>
+      <input type="text" name="firstName" placeholder="First name" required />
+    </div>
+
+    <div class="inputWrapper">
+      <div class="inputLabel">Last Name</div>
+      <input type="text" name="lastName" placeholder="Last name" required />
+    </div>
+
+    <div class="inputWrapper">
+      <div class="inputLabel">Email</div>
+      <input type="email" name="email" placeholder="Email" required />
+    </div>
+
+    <div class="inputWrapper ctaWrapper">
+      <button type="submit" class="cta green">Add Member</button>
+    </div>
+  </form>
+</div>
