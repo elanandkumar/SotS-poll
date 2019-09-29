@@ -1,54 +1,52 @@
-<h1>Account Settings</h1>
-
-<hr />
-
-<h2>Edit your account details</h2>
-
-<div class="formWrapper">
-  <form id="accountEdit1" action="/api/teams" method="PUT">
-    <input type="hidden" name="_method" value="PUT" />
-    <div class="formError"></div>
-    <div class="formSuccess">Your Changes Have Been Saved</div>
-    <input class="hiddenTeamNameInput" type="hidden" name="name" />
-    <div class="inputWrapper">
-      <div class="inputLabel">Team Name</div>
-      <input class="disabled teamNameInput" type="text" name="teamName" disabled />
-    </div>
-    <div class="inputWrapper ctaWrapper">
-      <button type="submit" class="cta green">Save Changes</button>
-    </div>
-  </form>
+<div class="jumbotron">
+  <h1 class="display-4">Account Settings</h1>
+  <hr />
+  <h2>Edit your account details</h2>
+  <div class="formWrapper">
+    <form class="form" id="accountEdit1" action="/api/teams" method="PUT">
+      <input type="hidden" name="_method" value="PUT" />
+      <div class="alert alert-danger formError" role="alert"></div>
+      <div class="alert alert-success formSuccess" role="alert">Your Changes Have Been Saved</div>
+      <input class="hiddenTeamNameInput" type="hidden" name="name" />
+      <div class="inputWrapper">
+        <div class="inputLabel">Team Name</div>
+        <input class="form-control disabled teamNameInput" type="text" name="teamName" disabled />
+      </div>
+      <div class="inputWrapper ctaWrapper">
+        <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+      </div>
+    </form>
+  </div>
+  <hr />
+  <h2>Change Your Password</h2>
+  <div class="formWrapper">
+    <form class="form" id="accountEdit2" action="/api/teams" method="PUT">
+      <input type="hidden" name="_method" value="PUT" />
+      <div class="alert alert-danger formError" role="alert"></div>
+      <div class="alert alert-success formSuccess" role="alert">Your New Password Has Been Saved</div>
+      <input class="hiddenTeamNameInput" type="hidden" name="name" />
+      <div class="inputWrapper">
+        <label for="password" class="sr-only">Choose a new password</label>
+        <input class="form-control" type="password" name="password" placeholder="Make it a good one!" />
+      </div>
+      <div class="ctaWrapper">
+        <button type="submit" class="btn btn-primary btn-block">Save Password</button>
+      </div>
+    </form>
+  </div>
 </div>
-
-<hr />
-<h2>Change Your Password</h2>
-<div class="formWrapper">
-  <form id="accountEdit2" action="/api/teams" method="PUT">
-    <input type="hidden" name="_method" value="PUT" />
-    <div class="formError"></div>
-    <div class="formSuccess">Your New Password Has Been Saved</div>
-    <input class="hiddenTeamNameInput" type="hidden" name="name" />
-    <div class="inputWrapper">
-      <div class="inputLabel">Choose a New Password</div>
-      <input type="password" name="password" placeholder="Make it a good one!" />
-    </div>
-    <div class="inputWrapper ctaWrapper">
-      <button type="submit" class="cta green">Save Password</button>
-    </div>
-  </form>
-</div>
-
 
 <hr />
 <h2>Delete Your Account</h2>
 <div class="formWrapper">
   <form id="accountEdit3" action="/api/teams" method="DELETE">
     <input type="hidden" name="_method" value="DELETE" />
-    <div class="formError"></div>
-    <div class="warning">Warning: This action cannot be undone. Don't click this button on accident!</div>
+    <div class="alert alert-danger formError" role="alert"></div>
+    <div class="alert alert-danger" role="alert">Warning: This action cannot be undone. Don't click this button on
+      accident!</div>
     <input class="hiddenTeamNameInput" type="hidden" name="name" />
-    <div class="inputWrapper ctaWrapper">
-      <button type="submit" class="cta red">Delete Account</button>
+    <div class="ctaWrapper">
+      <button type="submit" class="btn btn-danger btn-lg">Delete Account</button>
     </div>
   </form>
 </div>

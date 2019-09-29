@@ -1,12 +1,16 @@
 <div class="jumbotron">
-  <h1 class="display-4">Create Poll</h1>
-  <h2>Create a poll to vote for star of the sprint</h2>
+  <h1 class="display-4">Edit Poll</h1>
 
   <div class="formWrapper">
-    <form class="form" id="pollCreate" action="/api/poll" method="POST">
+    <form class="form" id="pollEdit1" action="/api/poll" method="PUT">
+      <input type="hidden" name="_method" value="PUT" />
       <div class="alert alert-danger formError" role="alert"></div>
-      <input class="hiddenTeamNameInput" type="hidden" name="name" />
+      <div class="alert alert-success formSuccess" role="alert">Your Changes Have Been Saved</div>
       <div class="inputWrapper first">
+        <label for="memberId" class="sr-only">Poll ID</label>
+        <input class="form-control disabled pollIdInput" type="text" name="pollId" disabled />
+      </div>
+      <div class="inputWrapper">
         <label for="teamName" class="sr-only">Team Name</label>
         <input class="form-control disabled teamNameInput" type="text" name="teamName" disabled />
       </div>
@@ -27,8 +31,22 @@
         </div>
       </div>
       <div class="ctaWrapper">
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
       </div>
     </form>
   </div>
+</div>
+
+<h2>Delete The Poll</h2>
+<div class="formWrapper">
+  <form id="pollEdit2" action="/api/poll" method="DELETE">
+    <input type="hidden" name="_method" value="DELETE" />
+    <div class="alert alert-danger formError" role='alert'></div>
+    <div class="alert alert-danger warning">Warning: This action cannot be undone. Don't click this button on
+      accident!</div>
+    <input class="hiddenIdInput" type="hidden" name="uid" />
+    <div class="ctaWrapper">
+      <button type="submit" class="btn btn-danger btn-lg">Delete Poll</button>
+    </div>
+  </form>
 </div>

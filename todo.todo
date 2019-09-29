@@ -1,0 +1,7 @@
+✔ Delete Poll @done(19-09-29 12:03)
+✔ Edit Poll @done(19-09-29 12:03)
+☐ Create Poll: Send members id when creating poll
+☐ Edit Poll: Send members id (updated one)
+☐ Cast Poll
+☐ Show results
+☐ Add logic to avoid adding duplicate member(by email ID)

@@ -1,59 +1,60 @@
-<h1>Member Details</h1>
-<a class="backButton" href="/members/all">Back</a>
-<hr />
+<div class="jumbotron">
+  <h1 class="display-4">Member Details</h1>
+  <a class="btn btn-dark backButton" role="button" href="/members/all">Back</a>
+  <hr />
 
-<h2>Edit the Member details</h2>
+  <h2>Edit the Member details</h2>
 
-<div class="formWrapper">
-  <form id="membersEdit1" action="/api/members" method="PUT">
-    <input type="hidden" name="_method" value="PUT" />
-    <div class="formError"></div>
-    <div class="formSuccess">Your Changes Have Been Saved</div>
-    <input class="hiddenIdInput" type="hidden" name="uid" />
+  <div class="formWrapper">
+    <form class="form" id="membersEdit1" action="/api/members" method="PUT">
+      <input type="hidden" name="_method" value="PUT" />
+      <div class="alert alert-danger formError" role="alert"></div>
+      <div class="alert alert-success formSuccess" role="alert">Your Changes Have Been Saved</div>
+      <input class="hiddenIdInput" type="hidden" name="uid" />
 
-    <div class="inputWrapper">
-      <div class="inputLabel">Member ID</div>
-      <input class="disabled memberIdInput" type="text" name="memberId" disabled />
-    </div>
+      <div class="inputWrapper first">
+        <label for="memberId" class="sr-only">Member ID</label>
+        <input class="form-control disabled memberIdInput" type="text" name="memberId" disabled />
+      </div>
 
-    <div class="inputWrapper">
-      <div class="inputLabel">Team name</div>
-      <input class="disabled teamNameInput" type="text" name="teamName" disabled />
-    </div>
+      <div class="inputWrapper">
+        <label for="teamName" class="sr-only">Team name</label>
+        <input class="form-control disabled teamNameInput" type="text" name="teamName" disabled />
+      </div>
 
-    <div class="inputWrapper">
-      <div class="inputLabel">First Name</div>
-      <input class="firstNameInput" type="text" name="firstName" />
-    </div>
+      <div class="inputWrapper">
+        <label for="firstName" class="sr-only">First Name</label>
+        <input class="form-control firstNameInput" type="text" name="firstName" />
+      </div>
 
-    <div class="inputWrapper">
-      <div class="inputLabel">Last Name</div>
-      <input class="lastNameInput" type="text" name="lastName" />
-    </div>
+      <div class="inputWrapper">
+        <label for="lastName" class="sr-only">Last Name</label>
+        <input class="form-control lastNameInput" type="text" name="lastName" />
+      </div>
 
-    <div class="inputWrapper">
-      <div class="inputLabel">Email</div>
-      <input class="emailInput" type="email" name="email" />
-    </div>
+      <div class="inputWrapper last">
+        <label for="email" class="sr-only">Email</label>
+        <input class="form-control emailInput" type="email" name="email" />
+      </div>
 
 
-    <div class="inputWrapper ctaWrapper">
-      <button type="submit" class="cta green">Save Changes</button>
-    </div>
-  </form>
+      <div class="ctaWrapper">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-
-<hr />
-<h2>Delete The Check</h2>
+<h2>Delete The Member</h2>
 <div class="formWrapper">
   <form id="membersEdit2" action="/api/members" method="DELETE">
     <input type="hidden" name="_method" value="DELETE" />
-    <div class="formError"></div>
-    <div class="warning">Warning: This action cannot be undone. Don't click this button on accident!</div>
+    <div class="alert alert-danger formError" role='alert'></div>
+    <div class="alert alert-danger warning">Warning: This action cannot be undone. Don't click this button on
+      accident!</div>
     <input class="hiddenIdInput" type="hidden" name="uid" />
-    <div class="inputWrapper ctaWrapper">
-      <button type="submit" class="cta red">Delete Member</button>
+    <div class="ctaWrapper">
+      <button type="submit" class="btn btn-danger btn-lg">Delete Member</button>
     </div>
   </form>
 </div>

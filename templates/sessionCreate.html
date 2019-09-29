@@ -1,19 +1,21 @@
-<h1>Login To Your Account</h1>
-<h2>Enter your team name and password</h2>
-
-<div class="formWrapper">
-  <form id="sessionCreate" action="/api/tokens" method="POST">
-    <div class="formError"></div>
-    <div class="inputWrapper">
-      <div class="inputLabel">Team Number</div>
-      <input type="text" name="name" placeholder="Nebula" />
-    </div>
-    <div class="inputWrapper">
-      <div class="inputLabel">Your Password</div>
-      <input type="password" name="password" placeholder="*********" />
-    </div>
-    <div class="inputWrapper ctaWrapper">
-      <button type="submit" class="cta blue">Team Login</button>
-    </div>
-  </form>
+<div class="jumbotron">
+  <h1 class="display-4">Login To Your Account</h1>
+  <h2>Enter your team name and password</h2>
+  <hr class="my-4">
+  <div class="formWrapper">
+    <form class="form" id="sessionCreate" action="/api/tokens" method="POST">
+      <div class="alert alert-danger formError" role="alert"></div>
+      <div class="inputWrapper first">
+        <label for="name" class="sr-only">Team name</label>
+        <input class="form-control" type="text" name="name" placeholder="Your team name" required autofocus />
+      </div>
+      <div class="inputWrapper last">
+        <label for="password" class="sr-only">Your password</label>
+        <input class="form-control" type="password" name="password" placeholder="Password" required />
+      </div>
+      <div class="ctaWrapper">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Team Login</button>
+      </div>
+    </form>
+  </div>
 </div>

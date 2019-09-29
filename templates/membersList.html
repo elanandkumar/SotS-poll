@@ -1,38 +1,40 @@
-<h1>Dashboard</h1>
-<h2>You may add up to 10 members</h2>
-<hr />
+<div class="jumbotron">
+  <h1 class="display-4">Dashboard</h1>
+  <hr />
+  <h4>Poll</h4>
+  <div class="table-responsive"></div>
+  <table id="pollListTable" class="table">
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Details</th>
+    </tr>
+    <tr id="noPollMessage" class="alert alert-warning">
+      <td colspan="3">You have no poll, please create one!</td>
+    </tr>
+  </table>
 
-<h3 style="font-size: 22px;">Team Members</h3>
-<table id="membersListTable">
-  <tr>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Email</th>
-    <th>Details</th>
-  </tr>
-  <tr id="noMembersMessage">
-    <td colspan="4">You have no members, please add one!</td>
-  </tr>
-
-</table>
-
-<div id="createMemberCTA" class="ctaWrapper">
-  <a class="cta green" href="members/create">Add a Member</a>
+  <div id="createPollCTA" class="ctaWrapper">
+    <a class="btn btn-primary" role="button" href="poll/create">Create Poll</a>
+  </div>
+  <hr />
+  <h4>Team Members</h4>
+  <div>You may add up to 10 members</div>
+  <div class="table-responsive">
+    <table id="membersListTable" class="table">
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Details</th>
+      </tr>
+      <tr id="noMembersMessage" class="alert alert-warning">
+        <td colspan="4">You have no members, please add one!</td>
+      </tr>
+    </table>
+  </div>
+  <div id="createMemberCTA" class="ctaWrapper">
+    <a class="btn btn-primary" href="members/create" role="button">Add a Member</a>
+  </div>
 </div>
-<br /><br /><br /><br /><br />
-<h3 style="font-size: 22px;">Poll</h3>
-<table id="pollListTable">
-  <tr>
-    <th>Title</th>
-    <th>Description</th>
-    <th>Details</th>
-  </tr>
-  <tr id="noPollMessage">
-    <td colspan="2">You have no poll, please create one!</td>
-  </tr>
-
-</table>
-
-<div id="createPollCTA" class="ctaWrapper">
-  <a class="cta green" href="poll/create">Create Poll</a>
 </div>

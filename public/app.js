@@ -144,6 +144,7 @@ app.bindForms = function() {
   if (document.querySelector("form")) {
     var allForms = document.querySelectorAll("form");
     for (var i = 0; i < allForms.length; i++) {
+      console.log(allForms[i]);
       allForms[i].addEventListener("submit", function(e) {
         // Stop it from submitting
         e.preventDefault();
@@ -299,7 +300,8 @@ app.formResponseProcessor = function(formId, requestPayload, responsePayload) {
   var formsWithSuccessMessages = [
     "accountEdit1",
     "accountEdit2",
-    "membersEdit1"
+    "membersEdit1",
+    "pollEdit1"
   ];
   if (formsWithSuccessMessages.indexOf(formId) > -1) {
     document.querySelector("#" + formId + " .formSuccess").style.display =
@@ -318,7 +320,7 @@ app.formResponseProcessor = function(formId, requestPayload, responsePayload) {
   }
 
   // If the team just deleted a member, redirect them to the dashboard
-  if (formId == "membersEdit2") {
+  if (formId == "membersEdit2" || formId === "pollEdit2") {
     window.location = "/members/all";
   }
 };
@@ -441,6 +443,133 @@ app.loadDataOnPage = function() {
   if (primaryClass === "pollCreate") {
     app.loadPollCreatePage();
   }
+
+  if (primaryClass === "pollEdit") {
+    app.loadPollEditPage();
+  }
+};
+
+app.loadPollEditPage = function() {
+  var id =
+    typeof window.location.href.split("=")[1] == "string" &&
+    window.location.href.split("=")[1].length > 0
+      ? window.location.href.split("=")[1]
+      : false;
+  if (id) {
+    // Fetch the poll data
+    var queryStringObject = {
+      id: id
+    };
+
+    app.client.request(
+      undefined,
+      "api/poll",
+      "GET",
+      queryStringObject,
+      undefined,
+      function(statusCode, responsePayload) {
+        if (statusCode == 200) {
+          // Put the hidden id field into both forms
+          var hiddenIdInputs = document.querySelectorAll("input.hiddenIdInput");
+          for (var i = 0; i < hiddenIdInputs.length; i++) {
+            hiddenIdInputs[i].value = responsePayload.id;
+          }
+
+          // Put the data into the top form as values where needed
+          document.querySelector("#pollEdit1 .pollIdInput").value =
+            responsePayload.id;
+          document.querySelector("#pollEdit1 .teamNameInput").value =
+            responsePayload.teamName;
+          document.querySelector("#pollEdit1 .pollTitleInput").value =
+            responsePayload.title;
+          document.querySelector("#pollEdit1 .pollDescriptionInput").value =
+            responsePayload.description;
+
+          app.client.request(
+            undefined,
+            "api/teams",
+            "GET",
+            { name: responsePayload.teamName },
+            undefined,
+            function(statusCode, responsePayload) {
+              if (statusCode == 200) {
+                var allMembers =
+                  typeof responsePayload.members == "object" &&
+                  responsePayload.members instanceof Array &&
+                  responsePayload.members.length > 0
+                    ? responsePayload.members
+                    : [];
+                if (allMembers.length >= 2) {
+                  // Show each added member as a new row in the table
+                  allMembers.forEach(function(memberId) {
+                    // Get the data for the member
+                    var newQueryStringObject = {
+                      id: memberId
+                    };
+                    app.client.request(
+                      undefined,
+                      "api/members",
+                      "GET",
+                      newQueryStringObject,
+                      undefined,
+                      function(statusCode, responsePayload) {
+                        if (statusCode == 200) {
+                          // var memberData = responsePayload;
+                          // Make the member data into a table row
+                          var membersDiv = document.getElementById(
+                            "membersList"
+                          );
+                          var memberDiv = document.createElement("div");
+                          var checkbox = document.createElement("input");
+                          // Assigning the attributes
+                          // to created checkbox
+                          checkbox.type = "checkbox";
+                          checkbox.name =
+                            "teamMember-" + responsePayload.firstName;
+                          checkbox.value = responsePayload.email;
+                          checkbox.id = responsePayload.id;
+                          checkbox.checked = true;
+                          // TODO. mark it as checked if data is available.
+                          var label = document.createElement("label");
+                          label.className = "no-select nameChip";
+                          label.htmlFor = responsePayload.id;
+                          label.innerText =
+                            responsePayload.lastName +
+                            ", " +
+                            responsePayload.firstName +
+                            " (" +
+                            responsePayload.email +
+                            ")";
+                          memberDiv.appendChild(checkbox);
+                          memberDiv.appendChild(label);
+                          membersDiv.appendChild(memberDiv);
+                        } else {
+                          console.log(
+                            "Error trying to load member ID: ",
+                            memberId
+                          );
+                        }
+                      }
+                    );
+                  });
+                } else {
+                  alert("Please add team members first to create poll");
+                  // If the request comes back as something other than 200, log the team out (on the assumption that the api is temporarily down or the teams token is bad)
+                  window.location = "/members/all";
+                }
+              } else {
+                window.location = "/members/all";
+              }
+            }
+          );
+        } else {
+          window.location = "/members/all";
+        }
+      }
+    );
+  } else {
+    window.location = "/members/all";
+  }
 };
 
 // Load the poll create page specifically
@@ -507,8 +636,10 @@ app.loadPollCreatePage = function() {
                     checkbox.value = responsePayload.email;
                     checkbox.id = responsePayload.id;
                     // TODO. mark it as checked if data is available.
-                    var span = document.createElement("span");
-                    span.innerText =
+                    var label = document.createElement("label");
+                    label.className = "no-select nameChip";
+                    label.htmlFor = responsePayload.id;
+                    label.innerText =
                       responsePayload.lastName +
                       ", " +
                       responsePayload.firstName +
@@ -516,7 +647,7 @@ app.loadPollCreatePage = function() {
                       responsePayload.email +
                       ")";
                     memberDiv.appendChild(checkbox);
-                    memberDiv.appendChild(span);
+                    memberDiv.appendChild(label);
                     membersDiv.appendChild(memberDiv);
                   } else {
                     console.log("Error trying to load member ID: ", memberId);
@@ -729,9 +860,9 @@ app.loadMembersEditPage = function() {
     window.location.href.split("=")[1].length > 0
       ? window.location.href.split("=")[1]
       : false;
-  console.log("edit...", id);
+
   if (id) {
-    // Fetch the check data
+    // Fetch the member data
     var queryStringObject = {
       id: id
     };
@@ -743,7 +874,6 @@ app.loadMembersEditPage = function() {
       queryStringObject,
       undefined,
       function(statusCode, responsePayload) {
-        console.log(statusCode, responsePayload);
         if (statusCode == 200) {
           // Put the hidden id field into both forms
           var hiddenIdInputs = document.querySelectorAll("input.hiddenIdInput");

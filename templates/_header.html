@@ -6,6 +6,7 @@
   <meta charset="utf-8">
   <meta http-equiv="content-language" content="en-us">
   <base href="{global.baseUrl}" />
+  <link rel="stylesheet" type="text/css" href="/public/bootstrap.min.css" />
 
   <!-- Meta Tags -->
   <title>{head.title} | {global.appName}</title>
@@ -13,44 +14,47 @@
 
   <!-- Static Assets -->
   <link type="image/x-icon" rel="icon" href="/favicon.ico">
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
   <script type="text/javascript" charset="utf-8" src="/public/app.js"></script>
   <link rel="stylesheet" type="text/css" href="/public/app.css" />
 
 </head>
 
 <body class="{body.class}">
-  <!-- Page Wrapper -->
-  <div class="wrapper">
-    <!-- Header -->
-    <div class="header">
-      <!-- Logo -->
-      <a class="logo" href="/">
-        <img src="/public/logo.png" alt="Logo" />
-      </a>
-      <!-- Navigation -->
-      <ul class="menu">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li class="loggedOut">
-          <a href="/account/create">Signup</a>
-        </li>
-        <li class="loggedOut">
-          <a href="/session/create">Login</a>
-        </li>
-        <li class="loggedIn">
-          <a href="/members/all">Dashboard</a>
-        </li>
-        <li class="loggedIn">
-          <a href="/account/edit">Account Settings</a>
-        </li>
-        <li class="loggedIn">
-          <a href="#" id="logoutButton">Logout</a>
-        </li>
-      </ul>
-
-      <div class="clear"></div>
-    </div>
-
-    <!-- Page-Specific Content -->
-    <div class="content">
+  <!-- Header -->
+  <header class="header">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand logo" href="#">
+        <img src="/public/logo.png" alt="Logo" /> SotS - Poll</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item loggedOut">
+            <a class="nav-link" href="/account/create">Signup</a>
+          </li>
+          <li class="nav-item loggedOut">
+            <a class="nav-link" href="/session/create">Login</a>
+          </li>
+          <li class="nav-item loggedIn">
+            <a class="nav-link" href="/members/all">Dashboard</a>
+          </li>
+          <li class="nav-item loggedIn">
+            <a class="nav-link" href="/account/edit">Account Settings</a>
+          </li>
+          <li class="nav-item loggedIn">
+            <a class="nav-link" href="#" id="logoutButton">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Page-Specific Content -->
+  <main role="main" class="container">
