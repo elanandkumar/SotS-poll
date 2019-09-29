@@ -1,0 +1,1 @@
+This folder is going to hold all poll irrespective of the team who created it.

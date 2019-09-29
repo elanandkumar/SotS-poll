@@ -5,3 +5,7 @@
 ☐ Cast Poll
 ☐ Show results
 ☐ Add logic to avoid adding duplicate member(by email ID)
+☐ back navigation from create poll page
+☐ Create a super user to destroy everything
+☐ If already loggedin, homepage should be updated
+

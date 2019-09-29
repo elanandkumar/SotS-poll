@@ -1,0 +1,1 @@
+This folder is going to hold all teams by its name
