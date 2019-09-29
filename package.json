@@ -3,6 +3,6 @@
   "description": "Simple and easy to use poll system to choose star of the sprint",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "NODE_ENV=production node index.js"
   }
 }
